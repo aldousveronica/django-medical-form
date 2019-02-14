@@ -1,0 +1,70 @@
+<html> 
+    <head> 		
+        <title>List of Participants</title> 	
+    </head> 	
+    <body> 		
+        <!-- for each participant, p, in the database... -->
+        {% for p in allParticipants %} 
+            <b>Participant:</b>
+            <!-- Gets name for the participant-->
+            {{p.name}} 
+            <!-- this both displays the review status and lets someone set it-->
+            <form method="POST" action="{% url 'status' %}"> 
+                {% csrf_token %} 
+                <!-- sets the participant's id to look up the participant in the view-->
+                <input type="hidden" name="ID" value="{{p.id}}" />
+                <!-- this creates a drop down box with selections for the review status-->
+                <select name="status">
+                    <!-- set the value based on the status of the participant-->
+                    {% if p.status == 0 %} 
+                        <option value="0" selected="selected">Not Reviewed</option>     
+                        <option value="1">Reviewed - Accepted</option> 
+                        <option value="2">Reviewed - Not Accepted</option> 
+                    {% elif p.status == 1 %}  
+                        <option value="0">Not Reviewed</option> 
+                        <option value="1" selected="selected">Reviewed - Accepted</option>     
+                        <option value="2">Reviewed - Not Accepted</option> 
+                    {% else %}  
+                        <option value="0">Not Reviewed</option> 
+                        <option value="1">Reviewed - Accepted</option>     
+                        <option value="2" selected="selected">Reviewed - Not Accepted</option>  
+                    {% endif %}         
+
+                </select> 
+                <!-- creates a submit button -->
+                <input type="submit" value="update review status" />
+            </form>
+            <!-- creates a line break-->
+            <br /> 
+            <!-- bolds the text-->
+            <b>Age:</b>
+            <!-- displays age of participant-->
+            {{p.age}}
+            <br /> 
+            <!-- display whether the participant has siblings -->
+            <b>{% if p.siblings %} 
+            Participant has sibling(s)
+            {% else %}
+            Participant does not have sibling(s)
+            {% endif %}</b>
+            <br /> 
+            <!-- creates read only text box-->
+            <b>Known Environmental Exposures:</b>
+            <!-- displays participant environmental exposures-->
+            <textarea readonly="readonly">{{p.exposures}}</textarea>
+            <br /> 
+            <!-- displays participant known genetic mutations-->
+            <b>Known Genetic Mutations:</b>
+            <textarea readonly="readonly">{{p.mutations}}</textarea>
+            <br /> 
+            <br /> 
+            <br /> 
+        {% endfor %}
+        <!-- link to delete entered content-->
+        <a href="{% url 'delete' %}">Delete All Content</a>
+        <br />
+        <!-- link to return to Participant Entry Form-->
+        <a href="{% url 'enterparticipant' %}">Return to Participant Entry Form</a>
+    </body> 
+</html>
+
